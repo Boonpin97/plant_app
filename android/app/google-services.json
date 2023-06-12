@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "369882894522",
+    "firebase_url": "https://plant-c01cb-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "plant-c01cb",
+    "storage_bucket": "plant-c01cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369882894522:android:ced7197c1ea83ce0d57283",
+        "android_client_info": {
+          "package_name": "com.boonpin.plant_system2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "369882894522-r9v1amf88p1135b1ucup3qh4s8uonmqt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXNh3WFGrR2djHHuM2JU3uHeu1XG1ywEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "369882894522-r9v1amf88p1135b1ucup3qh4s8uonmqt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
