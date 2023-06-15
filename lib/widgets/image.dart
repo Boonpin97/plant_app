@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 
 bool streamingBool = true;
-int disconnectThreshold = 30;
+int disconnectThreshold = 5;
 bool flag = false;
 int frameValue = 0;
 DateTime now = DateTime.now();
