@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '/widgets/card.dart';
 
-int ldr_value = 0;
+int ldr_value = 0; //LDR values
 int moisture_value = 0;
 int light_value = 0;
 int pump_value = 0;
