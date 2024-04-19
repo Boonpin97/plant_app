@@ -42,23 +42,6 @@ class _MyWidgetState extends State<FirestoreImageDisplay> {
     );
   }
 
-  void _refresh() async {
-    flag = true;
-    await refreshRef.set(1);
-    // print("Set as 1 !!");
-    // setState(() {});
-    // await Future.delayed(const Duration(milliseconds: 1000));
-    // while (flag) {
-    //   final snapshot = await refreshRef.get();
-    //   final data = snapshot.value;
-    //   flag = data == 1;
-    // }
-    // flag = false;
-    // print("Done!!!!!");
-    // getImageUrl();
-    //setState(() {});
-  }
-
   Future<void> getImageUrl() async {
     // Get the feference to the image file in Firebase Storage
     final ref = storage.ref().child('photo.jpg');
@@ -104,53 +87,53 @@ class _MyWidgetState extends State<FirestoreImageDisplay> {
 
     return Column(
       children: [
-        Container(
-          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          alignment: Alignment.topCenter,
-          width: double.infinity,
-          child: Image(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
-        SizedBox(
-          height: 10,
-          width: double.infinity,
-        ),
-        SizedBox(
-          height: 50,
-          width: flag
-              ? 250
-              : streamingBool
-                  ? 170
-                  : 250,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+        Column(
+          children: [
+            SizedBox(
+              height: 10,
+              width: double.infinity,
             ),
-            onPressed: !streamingBool || flag ? null : () => _refresh(),
-            child: Text(
-              flag
-                  ? "Refreshing..."
-                  : streamingBool
-                      ? "Refresh"
-                      : "Disconnected",
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
+            SizedBox(
+              height: 250,
+              width: 350,
+              child: Image.asset('asset/crops.png'),
+              // SizedBox(
+              //   height: 50,
+              //   width: flag
+              //       ? 250
+              //       : streamingBool
+              //           ? 170
+              //           : 250,
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.green,
+              //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+              //     ),
+              //     onPressed: !streamingBool || flag ? null : () => _refresh(),
+              //     child: Text(
+              //       flag
+              //           ? "Refreshing..."
+              //           : streamingBool
+              //               ? "Refresh"
+              //               : "Disconnected",
+              //       style: TextStyle(fontSize: 30),
+              //       textAlign: TextAlign.center,
+              //     ),
+              //   ),
+              // ),
+              // BlinkText(
+              //   streamingBool ? "Disconnected" : "Live Streaming...",
+              //   beginColor: streamingBool ? Colors.red : Colors.black,
+              //   endColor: Colors.transparent,
+              //   duration: Duration(seconds: 1),
+              //   style: TextStyle(
+              //     fontSize: 30,
+              //     fontStyle: FontStyle.italic,
+              //   ),
+              // ),
             ),
-          ),
+          ],
         ),
-        // BlinkText(
-        //   streamingBool ? "Disconnected" : "Live Streaming...",
-        //   beginColor: streamingBool ? Colors.red : Colors.black,
-        //   endColor: Colors.transparent,
-        //   duration: Duration(seconds: 1),
-        //   style: TextStyle(
-        //     fontSize: 30,
-        //     fontStyle: FontStyle.italic,
-        //   ),
-        // ),
       ],
     );
   }

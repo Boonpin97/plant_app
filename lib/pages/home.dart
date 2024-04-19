@@ -8,17 +8,20 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+// 244, 223, 108, 1
+// 143, 198, 64, 1
+// 16, 106, 57, 1
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green[100],
+        backgroundColor: Color.fromRGBO(244, 223, 108, 1),
         appBar: AppBar(
-          backgroundColor: Colors.green[400],
+          backgroundColor: Color.fromRGBO(253, 187, 38, 1),
           title: const Text(
-            "Venus Fly Trap",
+            "AgriLink",
             style: TextStyle(
-              fontSize: 40,
+              fontSize: 35,
               color: Colors.white,
             ),
           ),

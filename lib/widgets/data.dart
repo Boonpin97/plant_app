@@ -3,13 +3,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '/widgets/card.dart';
 
-int ldr_value = 0; //LDR values
 int moisture_value = 0;
-int light_value = 0;
 int pump_value = 0;
+double humi_value = 0;
 double temp_value = 0.0;
-int humi_value = 0;
-String log_value = "NULL";
+double battcurrent_value = 0.0;
+double battvoltage_value = 0.0;
+double syscurrent_value = 0.0;
+double syspower_value = 0.0;
 
 class displayData extends StatefulWidget {
   @override
@@ -17,13 +18,14 @@ class displayData extends StatefulWidget {
 }
 
 class _displayDataState extends State<displayData> {
-  DatabaseReference ldrRef = FirebaseDatabase.instance.ref("sensor/ldr");
-  DatabaseReference moistureRef = FirebaseDatabase.instance.ref("sensor/moisture");
-  DatabaseReference temperatureRef = FirebaseDatabase.instance.ref("sensor/temperature");
-  DatabaseReference humidityRef = FirebaseDatabase.instance.ref("sensor/humidity");
-  DatabaseReference lightRef = FirebaseDatabase.instance.ref("actuator/light");
-  DatabaseReference pumpRef = FirebaseDatabase.instance.ref("actuator/pump");
-  DatabaseReference logRef = FirebaseDatabase.instance.ref("message");
+  DatabaseReference moistureRef = FirebaseDatabase.instance.ref("Sensors/Moisture");
+  DatabaseReference temperatureRef = FirebaseDatabase.instance.ref("Sensors/Temperature");
+  DatabaseReference humidityRef = FirebaseDatabase.instance.ref("Sensors/Humidity");
+  DatabaseReference pumpRef = FirebaseDatabase.instance.ref("Actuators/Pump");
+  DatabaseReference battcurrentRef = FirebaseDatabase.instance.ref("Power/Battery/Current");
+  DatabaseReference battvoltageRef = FirebaseDatabase.instance.ref("Power/Battery/Voltage");
+  DatabaseReference syscurrentRef = FirebaseDatabase.instance.ref("Power/System/Current");
+  DatabaseReference syspowerRef = FirebaseDatabase.instance.ref("Power/System/Power");
 
   @override
   Widget build(BuildContext context) {
@@ -40,32 +42,91 @@ class _displayDataState extends State<displayData> {
         // Text("Pump: " + pump_value.toString()),
         // Text("Temp: " + temp_value.toString()),
         // Text("Humi: " + humi_value.toString()),
-        Button(() => _functionHandlerLight(), "Light:", light_value, Icons.lightbulb_circle_outlined),
+        //Button(() => _functionHandlerLight(), "Light:", light_value, Icons.lightbulb_circle_outlined),
         Button(() => _functionHandlerPump(), "Pump:", pump_value, Icons.water_drop_outlined),
         SizedBox(height: 20, width: double.infinity),
+
+        Row(
+          children: [
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              decoration:
+                  BoxDecoration(color: Color.fromRGBO(143, 198, 64, 1), borderRadius: BorderRadius.circular(20)),
+              height: 130,
+              width: 180,
+              //color: Colors.green[400],
+              child: Column(
+                children: [
+                  SizedBox(height: 10, width: double.infinity),
+                  Text(
+                    "System Usage",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.green[50],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(height: 3, width: double.infinity),
+                  dataCard("Power:", "${syspower_value.toStringAsFixed(2)} Wh", Icons.electric_meter, 16, 20),
+                  dataCard("Current:", "${syscurrent_value.toStringAsFixed(2)} A", Icons.electric_bolt, 16, 20),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              decoration:
+                  BoxDecoration(color: Color.fromRGBO(143, 198, 64, 1), borderRadius: BorderRadius.circular(20)),
+              height: 130,
+              width: 180,
+              //color: Colors.green[400],
+              child: Column(
+                children: [
+                  SizedBox(height: 10, width: double.infinity),
+                  Text(
+                    "Battery Status",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.green[50],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(height: 3, width: double.infinity),
+                  dataCard("Voltage:", "${battvoltage_value.toStringAsFixed(2)} V", Icons.power_input, 16, 20),
+                  dataCard("Current:", "${battcurrent_value.toStringAsFixed(2)} A", Icons.electric_bolt, 16, 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10, width: double.infinity),
         Container(
-          decoration: BoxDecoration(color: Colors.green[400], borderRadius: BorderRadius.circular(20)),
-          height: 200,
+          decoration: BoxDecoration(color: Color.fromRGBO(143, 198, 64, 1), borderRadius: BorderRadius.circular(20)),
+          height: 150,
           width: 370,
-          //color: Colors.green[400],
           child: Column(
             children: [
-              dataCard("Temperature:", "$temp_value°C", Icons.thermostat),
-              dataCard("Brightness:", light_value == 1 ? "High" : "Low", Icons.sunny),
-              dataCard("Humidity:", "$humi_value%", Icons.water_damage),
-              dataCard("Moisture:", (moisture_value / 10.23).toStringAsPrecision(2) + "%", Icons.water),
-              //logCard("Logs:", log_value)
+              SizedBox(height: 10, width: double.infinity),
+              Text(
+                "Sensors Data",
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.green[50],
+                ),
+                textAlign: TextAlign.right,
+              ),
+              //SizedBox(height: 10, width: double.infinity),
+              dataCard("Temperature:", "$temp_value°C", Icons.thermostat, 18, 20),
+              dataCard("Humidity:", "$humi_value%", Icons.water_damage, 18, 20),
+              dataCard("Soil:", moisture_value == 1 ? "Wet" : "Dry", Icons.water, 18, 20),
             ],
           ),
-        )
+        ),
       ],
     ));
-  }
-
-  void _functionHandlerLight() async {
-    light_value = 1 - light_value;
-    await lightRef.set(light_value);
-    setState(() {});
   }
 
   void _functionHandlerPump() async {
@@ -75,30 +136,9 @@ class _displayDataState extends State<displayData> {
   }
 
   void listeners() {
-    logRef.onValue.listen((DatabaseEvent event) {
-      if (log_value != event.snapshot.value as String) {
-        log_value = event.snapshot.value as String;
-        setState(() {});
-      }
-      //updateStarCount(data);
-    });
-    ldrRef.onValue.listen((DatabaseEvent event) {
-      if (ldr_value != event.snapshot.value as int) {
-        ldr_value = event.snapshot.value as int;
-        setState(() {});
-      }
-      //updateStarCount(data);
-    });
     moistureRef.onValue.listen((DatabaseEvent event) {
       if (moisture_value != event.snapshot.value as int) {
         moisture_value = event.snapshot.value as int;
-        setState(() {});
-      }
-      //updateStarCount(data);
-    });
-    lightRef.onValue.listen((DatabaseEvent event) {
-      if (light_value != event.snapshot.value as int) {
-        light_value = event.snapshot.value as int;
         setState(() {});
       }
       //updateStarCount(data);
@@ -118,8 +158,36 @@ class _displayDataState extends State<displayData> {
       //updateStarCount(data);
     });
     humidityRef.onValue.listen((DatabaseEvent event) {
-      if (humi_value != event.snapshot.value as int) {
-        humi_value = event.snapshot.value as int;
+      if (humi_value != event.snapshot.value as double) {
+        humi_value = event.snapshot.value as double;
+        setState(() {});
+      }
+      //updateStarCount(data);
+    });
+    battcurrentRef.onValue.listen((DatabaseEvent event) {
+      if (battcurrent_value != event.snapshot.value as double) {
+        battcurrent_value = event.snapshot.value as double;
+        setState(() {});
+      }
+      //updateStarCount(data);
+    });
+    battvoltageRef.onValue.listen((DatabaseEvent event) {
+      if (battvoltage_value != event.snapshot.value as double) {
+        battvoltage_value = event.snapshot.value as double;
+        setState(() {});
+      }
+      //updateStarCount(data);
+    });
+    syscurrentRef.onValue.listen((DatabaseEvent event) {
+      if (syscurrent_value != event.snapshot.value as double) {
+        syscurrent_value = event.snapshot.value as double;
+        setState(() {});
+      }
+      //updateStarCount(data);
+    });
+    syspowerRef.onValue.listen((DatabaseEvent event) {
+      if (temp_value != event.snapshot.value as double) {
+        syspower_value = event.snapshot.value as double;
         setState(() {});
       }
       //updateStarCount(data);
